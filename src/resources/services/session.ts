@@ -79,9 +79,10 @@ export function restoreSession() {
         await setSession(null);
         return;
       }
+      // Tempo para a API hospedada no plano gratuito acordar (~50 s).
       const response = await fetch(`${API_URL}/auth/session`, {
         headers: { Authorization: `Bearer ${session.token}` },
-        signal: AbortSignal.timeout(10_000),
+        signal: AbortSignal.timeout(60_000),
       });
       if (!response.ok) {
         await setSession(null);
@@ -105,7 +106,7 @@ export async function signIn(email: string, password: string) {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email: email.trim(), password }),
-    signal: AbortSignal.timeout(15_000),
+    signal: AbortSignal.timeout(60_000),
   });
   const data = await response.json().catch(() => null);
   if (!response.ok)
